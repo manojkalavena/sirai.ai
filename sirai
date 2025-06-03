@@ -1,0 +1,102 @@
+import tkinter as tk
+from tkinter import scrolledtext
+import threading
+import speech_recognition as sr
+import pyttsx3
+import datetime
+import webbrowser
+import wikipedia
+import os
+import random
+engine = pyttsx3.init('sapi5')
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[1].id)
+def speak(audio):
+    engine.say(audio)
+    engine.runAndWait()
+def wishMe():
+    hour = int(datetime.datetime.now().hour)
+    if hour < 12:
+        return "Good Morning!"
+    elif hour < 18:
+        return "Good Afternoon!"
+    else:
+        return "Good Evening!"
+def takeCommand():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        status_label.config(text="Listening...")
+        r.pause_threshold = 1
+        audio = r.listen(source)
+    try:
+        status_label.config(text="Recognizing...")
+        query = r.recognize_google(audio, language='en-in')
+        return query
+    except Exception:
+        return "None"
+def process_query():
+    query = takeCommand().lower()
+    chat_log.insert(tk.END, f"User: {query}\n")
+    chat_log.see(tk.END)
+    if 'wikipedia' in query:
+        speak('Searching Wikipedia...')
+        query = query.replace("wikipedia", "")
+        results = wikipedia.summary(query, sentences=2)
+        speak(results)
+        chat_log.insert(tk.END, f"ETHAN: {results}\n")
+    elif 'open youtube' in query:
+        speak("Opening YouTube")
+        webbrowser.open("https://youtube.com")
+        chat_log.insert(tk.END, "ETHAN: Opened YouTube\n")
+    elif 'open google' in query:
+        speak("Opening Google")
+        webbrowser.open("https://google.com")
+        chat_log.insert(tk.END, "ETHAN: Opened Google\n")
+    elif 'open linkedin' in query:
+        speak("Opening linkedin")
+        webbrowser.open("https://linkedin.com")
+        chat_log.insert(tk.END, "ETHAN: Opened linkedin\n")
+    elif 'open whatsapp' in query:
+        speak("Opening whatsapp")
+        webbrowser.open("https://whatsapp.com")
+        chat_log.insert(tk.END, "ETHAN: Opening whatsapp\n")
+    elif 'play music' in query:
+        music_dir = "C:\\Users\\GAURAV\\Music"
+        songs = os.listdir(music_dir)
+        if songs:
+            os.startfile(os.path.join(music_dir, songs[0]))
+            chat_log.insert(tk.END, "ETHAN: Playing music...\n")
+        else:
+            chat_log.insert(tk.END, "ETHAN: No music files found.\n")
+    elif 'time' in query:
+        strTime = datetime.datetime.now().strftime("%H:%M:%S")
+        speak(f"The time is {strTime}")
+        chat_log.insert(tk.END, f"ETHAN: The time is {strTime}\n")
+    elif 'exit' in query:
+        speak("Goodbye!")
+        root.quit()
+    else:
+        speak("Sorry, I didn't get that.")
+        chat_log.insert(tk.END, "ETHAN: Sorry, I didn't understand.\n")
+    status_label.config(text="Idle")
+    chat_log.see(tk.END)
+def start_listening():
+    thread = threading.Thread(target=process_query)
+    thread.start()
+root = tk.Tk()
+root.title("ETHAN - Voice Assistant")
+root.geometry("700x600")
+root.configure(bg="#2E3B4E")
+title = tk.Label(root, text="ETHAN Voice Assistant", font=("Arial", 20, "bold"), fg="white", bg="#2E3B4E")
+title.pack(pady=20)
+chat_log = scrolledtext.ScrolledText(root, width=80, height=20, bg="#1E1E1E", fg="white", font=("Courier", 12), wrap=tk.WORD)
+chat_log.pack(pady=10)
+chat_log.insert(tk.END, "ETHAN: " + wishMe() + "\n")
+status_label = tk.Label(root, text="Idle", font=("Arial", 14), fg="green", bg="#2E3B4E")
+status_label.pack(pady=5)
+# Use a text button instead of the microphone icon
+mic_btn = tk.Button(root, text="🎤 Start Listening", command=start_listening, font=("Arial", 16), bg="#28A745", fg="white", padx=20, pady=10, relief="raised")
+mic_btn.pack(pady=20)
+exit_btn = tk.Button(root, text="Exit", command=root.quit, font=("Arial", 14), bg="#DC3545", fg="white", padx=20, pady=10, relief="raised")
+exit_btn.pack(pady=10)
+root.mainloop()
