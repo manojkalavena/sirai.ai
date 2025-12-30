@@ -43,55 +43,55 @@ def process_query():
         query = query.replace("wikipedia", "")
         results = wikipedia.summary(query, sentences=2)
         speak(results)
-        chat_log.insert(tk.END, f"ETHAN: {results}\n")
+        chat_log.insert(tk.END, f"SIRAI: {results}\n")
     elif 'open youtube' in query:
         speak("Opening YouTube")
         webbrowser.open("https://youtube.com")
-        chat_log.insert(tk.END, "ETHAN: Opened YouTube\n")
+        chat_log.insert(tk.END, "SIRAI: Opened YouTube\n")
     elif 'open google' in query:
         speak("Opening Google")
         webbrowser.open("https://google.com")
-        chat_log.insert(tk.END, "ETHAN: Opened Google\n")
+        chat_log.insert(tk.END, "SIRAI: Opened Google\n")
     elif 'open linkedin' in query:
         speak("Opening linkedin")
         webbrowser.open("https://linkedin.com")
-        chat_log.insert(tk.END, "ETHAN: Opened linkedin\n")
+        chat_log.insert(tk.END, "SIRAI: Opened linkedin\n")
     elif 'open whatsapp' in query:
         speak("Opening whatsapp")
         webbrowser.open("https://whatsapp.com")
-        chat_log.insert(tk.END, "ETHAN: Opening whatsapp\n")
+        chat_log.insert(tk.END, "SIRAI: Opening whatsapp\n")
     elif 'play music' in query:
         music_dir = "C:\\Users\\GAURAV\\Music"
         songs = os.listdir(music_dir)
         if songs:
             os.startfile(os.path.join(music_dir, songs[0]))
-            chat_log.insert(tk.END, "ETHAN: Playing music...\n")
+            chat_log.insert(tk.END, "SIRAI: Playing music...\n")
         else:
-            chat_log.insert(tk.END, "ETHAN: No music files found.\n")
+            chat_log.insert(tk.END, "SIRAI: No music files found.\n")
     elif 'time' in query:
         strTime = datetime.datetime.now().strftime("%H:%M:%S")
         speak(f"The time is {strTime}")
-        chat_log.insert(tk.END, f"ETHAN: The time is {strTime}\n")
+        chat_log.insert(tk.END, f"SIRAI: The time is {strTime}\n")
     elif 'exit' in query:
         speak("Goodbye!")
         root.quit()
     else:
         speak("Sorry, I didn't get that.")
-        chat_log.insert(tk.END, "ETHAN: Sorry, I didn't understand.\n")
+        chat_log.insert(tk.END, "SIRAI: Sorry, I didn't understand.\n")
     status_label.config(text="Idle")
     chat_log.see(tk.END)
 def start_listening():
     thread = threading.Thread(target=process_query)
     thread.start()
 root = tk.Tk()
-root.title("ETHAN - Voice Assistant")
+root.title("SIRAI - Voice Assistant")
 root.geometry("700x600")
 root.configure(bg="#2E3B4E")
-title = tk.Label(root, text="ETHAN Voice Assistant", font=("Arial", 20, "bold"), fg="white", bg="#2E3B4E")
+title = tk.Label(root, text="SIRAI Voice Assistant", font=("Arial", 20, "bold"), fg="white", bg="#2E3B4E")
 title.pack(pady=20)
 chat_log = scrolledtext.ScrolledText(root, width=80, height=20, bg="#1E1E1E", fg="white", font=("Courier", 12), wrap=tk.WORD)
 chat_log.pack(pady=10)
-chat_log.insert(tk.END, "ETHAN: " + wishMe() + "\n")
+chat_log.insert(tk.END, "SIRAI: " + wishMe() + "\n")
 status_label = tk.Label(root, text="Idle", font=("Arial", 14), fg="green", bg="#2E3B4E")
 status_label.pack(pady=5)
 # Use a text button instead of the microphone icon
